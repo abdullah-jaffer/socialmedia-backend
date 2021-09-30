@@ -1,6 +1,5 @@
 import http from 'http';
 import express from 'express';
-import bodyParser from 'body-parser';
 import config from './config/config';
 import { putUser, 
          listUsers, 
@@ -9,7 +8,9 @@ import { putUser,
          listPosts, 
          getPostById,
          getPostsById, 
-         updatePostById } from './routes/index';
+         updatePostById,
+         follow,
+         feed } from './routes/index';
 
 const app = express();
 
@@ -29,7 +30,9 @@ app.use('/app', putUser,
                 listPosts, 
                 getPostById,
                 getPostsById, 
-                updatePostById);
+                updatePostById,
+                follow,
+                feed);
 
 /*Error handling*/
 app.use((req, res, next) => {
