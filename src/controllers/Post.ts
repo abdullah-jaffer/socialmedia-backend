@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { db } from '../models/index';
+import { paginationObject } from '../helpers/index';
 
 const { Post } = db;
 
@@ -27,9 +28,10 @@ const addPost = async (req:Request, res:Response) =>{
 } 
 
 const getPosts = async (req:Request, res:Response) =>{
-
+    const { limit, offset } = req.query 
+    let pagination: any = paginationObject(limit, offset);
     try{
-        const posts = await Post.findAll();
+        const posts = await Post.findAll(pagination);
         return res.status(200).json({
             status: 200,
             message:"Posts retrieved succesfully",
@@ -66,12 +68,16 @@ const getPost = async (req:Request, res:Response) =>{
 
 const getPostsByUserId = async (req:Request, res:Response) =>{
     const id = req?.params?.userId;
+    const { limit, offset } = req.query 
+    let pagination: any = paginationObject(limit, offset);
+    let whereClause = {
+        where: {
+          ownerId: id
+        }
+      }
+    let queryParams = {...pagination, ... whereClause};
     try{
-        const posts = await Post.findAll({
-            where: {
-              ownerId: id
-            }
-          });
+        const posts = await Post.findAll(queryParams);
         return res.status(200).json({
             status: 200,
             message:"Post for this user retrieved succesfully",

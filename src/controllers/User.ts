@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { db } from '../models/index';
+import { paginationObject } from '../helpers/index';
 
 const { User } = db;
 
@@ -27,9 +28,10 @@ const addUser = async (req:Request, res:Response) =>{
 } 
 
 const getUsers = async (req:Request, res:Response) =>{
-
+    const { limit, offset } = req.query 
+    let pagination: any = paginationObject(limit, offset);
     try{
-        const users = await User.findAll();
+        const users = await User.findAll( pagination );
         return res.status(200).json({
             status: 200,
             message:"Users retrieved succesfully",
