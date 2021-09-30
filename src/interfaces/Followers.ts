@@ -1,6 +1,6 @@
 interface Followers{
-    id: string;
-    user_id: number;
+    id: number;
+    following_id: number;
     follower_id: number;
 }
 
