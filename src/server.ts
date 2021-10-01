@@ -1,6 +1,7 @@
 import http from 'http';
 import express from 'express';
 import config from './config/config';
+import { verifyToken } from './middleware/auth'
 import { putUser, 
          listUsers, 
          getUserById,
@@ -10,7 +11,9 @@ import { putUser,
          getPostsById, 
          updatePostById,
          follow,
-         feed } from './routes/index';
+         unfollow,
+         feed,
+         signin } from './routes/index';
 
 const app = express();
 
@@ -21,6 +24,7 @@ app.use((req, res, next) => {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
   });
+  //app.use(verifyToken);
 
 /*Routes*/ 
 app.use('/app', putUser, 
@@ -32,7 +36,9 @@ app.use('/app', putUser,
                 getPostsById, 
                 updatePostById,
                 follow,
-                feed);
+                feed,
+                unfollow,
+                signin);
 
 /*Error handling*/
 app.use((req, res, next) => {

@@ -19,13 +19,31 @@ const addFollower = async (req:Request, res:Response) =>{
             message:"You already follow this user"
         })
       }
-       const newFollower = await Follower.create({
-            follower_id: follower_id,
-            following_id: following_id,
+       await Follower.create({ follower_id: follower_id, following_id: following_id });
+        return res.status(200).json({
+            status: 200,
+            message:"Succesfully followed this user",
+        })
+    }catch(err){
+        return res.status(400).json({
+            status: 400,
+            message:err,
+        })
+    }
+} 
+
+const removeFollow = async (req:Request, res:Response) =>{
+    const { following_id, follower_id } = req.body
+    try{
+        await Follower.destroy({
+            where: {
+              follower_id: follower_id,
+              following_id: following_id
+            }
           });
         return res.status(200).json({
             status: 200,
-            message:"Succesfully followed this user"
+            message:"Succesfully unfollowed this user",
         })
     }catch(err){
         return res.status(400).json({
@@ -43,12 +61,16 @@ const getFollowsPosts = async (req:Request, res:Response) =>{
               follower_id: follower
             }
           });
-          const following_ids = following.map(user=> user.following_id);
-          const posts = await Post.findAll({
-            where: {
-              ownerId:  following_ids
+          const following_ids = following.map(user=> user.following_id); 
+          const { limit, offset } = req.query 
+          let pagination: any = paginationObject(limit, offset);
+          let whereClause = {
+          where: {
+            ownerId:  following_ids
             }
-          });
+          }
+        let queryParams = {...pagination, ... whereClause};
+        const posts = await Post.findAll(queryParams);
         return res.status(200).json({
             status: 200,
             message:"Followings posts retrieved succesfully",
@@ -64,4 +86,4 @@ const getFollowsPosts = async (req:Request, res:Response) =>{
 
 
 
-export { addFollower, getFollowsPosts };
+export { addFollower, getFollowsPosts, removeFollow };

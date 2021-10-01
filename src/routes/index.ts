@@ -1,6 +1,7 @@
 import  { putUser, listUsers, getUserById, updateUserById } from './User';
 import  { putPost , listPosts, getPostById, getPostsById, updatePostById } from './Post';
-import  {  follow, feed } from './Follower';
+import  {  follow, feed, unfollow } from './Follower';
+import { signin } from './auth';
 
 export {putUser, 
         listUsers, 
@@ -12,4 +13,6 @@ export {putUser,
         getPostsById, 
         updatePostById,
         follow,
-        feed }
+        feed,
+        unfollow,
+        signin }
